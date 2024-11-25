@@ -1,6 +1,5 @@
--- Create a new function that, given a float number, if its value has more than 2 decimals returns it rounded with two decimals at max. If the number does not have more than 2 decimals return the number as is.
-
 DROP FUNCTION IF EXISTS round_float;
+DELIMITER //
 CREATE FUNCTION round_float (number FLOAT)
 RETURNS FLOAT
 BEGIN
@@ -9,4 +8,5 @@ BEGIN
     ELSE
         RETURN ROUND(number, 2);
     END IF;
-END;
+END
+//
