@@ -174,7 +174,7 @@ HAVING
         ) AS max_sells_subquery
     );
 
--- Total: ?? rows (SELECT * FROM P201_05_challange2_music_festival.query_11;)
+-- Total: 3 rows (SELECT * FROM P201_05_challange2_music_festival.query_11;)
 
 --12)
 DROP VIEW IF EXISTS query_12;
@@ -183,11 +183,17 @@ SELECT p.id_person, p.name, p.surname, p.nationality, a.band_name, a.band_countr
 FROM person p
 JOIN artist a ON a.id_artist = p.id_person
 JOIN band b ON b.name = a.band_name AND b.country = a.band_country
+JOIN band_collab bc ON bc.collaborator_name = b.name AND bc.collaborator_country = b.country
+WHERE bc.band_name = "Ebri Knight"
+UNION SELECT p.id_person, p.name, p.surname, p.nationality, a.band_name, a.band_country
+FROM person p
+JOIN artist a ON a.id_artist = p.id_person
+JOIN band b ON b.name = a.band_name AND b.country = a.band_country
 JOIN band_collab bc ON bc.band_name = b.name AND bc.band_country = b.country
-WHERE bc.band_name = "Ebri Knight" AND p.id_person NOT IN (SELECT id_artist FROM artist WHERE band_name = "Ebri Knight")
-ORDER BY a.band_name ASC, a.band_country ASC;
+WHERE bc.collaborator_name = "Ebri Knight"
+ORDER BY 5 ASC, 6 ASC;
 
--- Total: ?? row (SELECT * FROM P201_05_challange2_music_festival.query_12;)
+-- Total: 15 rows (SELECT * FROM P201_05_challange2_music_festival.query_12;)
 
 --13)
 DROP VIEW IF EXISTS query_13;
