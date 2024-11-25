@@ -157,7 +157,22 @@ JOIN `show` sh ON sh.festival_name = bes.festival_name AND sh.festival_edition =
 JOIN band b ON b.name = sh.band_name AND b.country = sh.band_country
 WHERE b.name = "The Beatles" AND sh.festival_name = "Hellfest"
 GROUP BY p.id_person, p.name, p.surname, p.nationality, p.birth_date 
-HAVING COUNT(bes.id_beerman_sells) = (SELECT MAX(COUNT(bes.id_beerman_sells)) FROM beerman_sells bes);
+HAVING 
+    COUNT(bes.id_beerman_sells) = (
+        SELECT MAX(sells_count)
+        FROM (
+            SELECT COUNT(bes_inner.id_beerman_sells) AS sells_count
+            FROM beerman_sells bes_inner
+            JOIN `show` sh_inner ON sh_inner.festival_name = bes_inner.festival_name 
+                AND sh_inner.festival_edition = bes_inner.festival_edition 
+                AND sh_inner.id_stage = bes_inner.id_stage
+            JOIN band b_inner ON b_inner.name = sh_inner.band_name 
+                AND b_inner.country = sh_inner.band_country
+            WHERE b_inner.name = "The Beatles" 
+                AND sh_inner.festival_name = "Hellfest"
+            GROUP BY bes_inner.id_beerman
+        ) AS max_sells_subquery
+    );
 
 -- Total: ?? rows (SELECT * FROM P201_05_challange2_music_festival.query_11;)
 
