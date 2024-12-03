@@ -1,144 +1,116 @@
-# 24303 DATABASES–LABS
 
-## Challenge2: Database management, querying, and SQL scripting
+# 24303 DATABASES – LABS
 
-**Goals:**  
+## Challenge 2: Database management, querying and SQL scripting
+
+### Goals
 The lab will cover the following aspects:
+1. **Data Manipulation Language (DML):** Import/export data into DB.
+2. **Data Query Language (DQL):** Implement queries in SQL.
+3. **PL/SQL Requirements:** Create procedures, triggers, and events.
 
-1. **Import/export data** into DB (Data Manipulation Language – DML)
-2. Implement **queries in SQL** (Data Query Language – DQL)
-3. Implement **PL/SQL requirements**: Procedures, Triggers, and Events
+### Methodology
+This challenge is divided into **four sessions**. Follow the instructions step by step.
 
-**Methodology:**  
-This challenge is divided into four sessions. The statement of the lab must be read in order, following the instructions given step by step.
+#### Session 1
+- Create new tables and import data. Deliver this part in a file: `challenge2-load-data.sql`.
 
-### Session 1:
+#### Session 2
+- Write queries in SQL based on the requirements and deliver in a file: `challenge2-queries.sql`.
 
-```
-● Create new tables and import data. Deliver this part in an SQL file: challenge2-load-data.sql
-```
+#### Session 3
+- Continue working on queries (`challenge2-queries.sql`).
+- Develop new database objects: procedures, triggers, and events. Create individual SQL files for each:
+  - `challenge2-req01.sql`, `challenge2-req02.sql`, … `challenge2-reqNN.sql`.
 
-### Session 2:
+#### Session 4
+- Complete the implementation of new requirements.
+- Collect all `.sql` files into a ZIP archive named with the NIA numbers of the team members: `Uxxxxxx_Uxxxxxx_Uxxxxxx.zip`.
 
-● Create and deliver a new SQL file called **challenge2-queries.sql** for the queries and write your own queries based on the statements.
-
-### Session 3:
-
-● Continue working on the queries from the previous session (**challenge2-queries.sql**).  
-● Start working on the list of new _requirements_ for the database that will consist of creating procedures, trigger, and events structures. You should create an SQL file for each: (**challenge2-req01.sql**, **challenge2-req02.sql[...]challenge2-reqNN.sql**). One for every new requirement.
-
-### Session 4:
-
-● Continue working on the implementation of the new requirements (procedures, triggers, and events as asked).  
-● Collect your `.sql` files and prepare your deliverables.  
-
-All the used scripts used to solve whole Challenge 2 in a ZIP file. The ZIP file should be called with the NIA of each member of the group: **Uxxxxxx_Uxxxxxx_Uxxxxxx.zip**.  
-**ONLY A MEMBER OF THE GROUP WILL BE RESPONSIBLE FOR RETURNING THE CHALLENGE.**  
-All the scripts have to be created and also run over your database instance.  
-
-It is important to follow each point of the submission instructions. Otherwise, the lab will not be properly qualified, that is, it will be evaluated with a 0.  
-**Please, before your submission check the following requirements:**
-
-● All your scripts work **BEFORE** your submission.  
-● You have defined your tables and fields using the names specified in this document.  
-● The file scripts must include the UTF-8 codification.  
-● The file scripts must follow the names specified in this document.
+### Submission Instructions
+To ensure the lab is qualified, verify the following:
+- All scripts execute successfully before submission.
+- Table and field names adhere to the specification.
+- Scripts are UTF-8 encoded.
+- Files follow the specified naming convention.
 
 ---
 
-## Grouping:
-The challenge must be developed in teams of the same **three students of Challenge 1**.
+## 1. Introduction
+Each group has a database named `PXXX_XX_challange2_music_festival`. This database represents a music festival company's operations. Use the provided relational model and avoid relying on musical knowledge or assumptions.
 
 ---
 
-## LAB Database Server Access:
-You will be provided with a database server connection to deploy your database (if you are listed in a LAB Team Group).  
-Ensure that you are able to connect from home using UPF’s VPN connection:  
-[UPF VPN Connection](https://www.upf.edu/intranet/intern-universitat/connexio-vpn)
+## 2. New Requirements for the Database (50 points)
+
+### General Guidelines
+1. Ensure the `currency conversion tables` from Challenge 2 - Part 1.2 are present.
+2. Use `DROP db_object IF EXISTS` and `CREATE db_object` to define objects.
+3. Follow the naming convention: `reqNN_OBJECT_NAME`.
 
 ---
 
-## Software:
-We encourage you to use the **DBeaver** client or **MySQL Workbench**. For **DBeaver**, you can get the **Enterprise Edition** license for one year simply by filling out an easy form on their website using UPF email:  
-[DBeaver Academic License](https://dbeaver.com/academic-license)
+### 2.1. Requirement 1 (1 point)
+Create a function that rounds a float number to two decimal places if it has more than two decimals.
 
 ---
 
-## Doubts:
-For any doubts outside LAB hours regarding the challenge, please **contact always both** LAB teachers in your emails, and we will come back to you ASAP:
-
-● raimon.izard@upf.edu  
-● guillem.casacuberta@upf.edu  
+### 2.2. Requirement 2 (4 points)
+Create a function that checks if a given currency code exists. Return `TRUE` if it exists, `FALSE` otherwise.
 
 ---
 
-**Note:** The University has provided the required software (DBeaver and MySQL Workbench) to develop this lab, which is properly installed on the computers of the laboratory room classes. You will always have the option of working using the university computers. Furthermore, the professors have provided installation guides and manuals to facilitate the installation on your personal computers and for diverse OS systems (Windows, MacOS, and other Unix-like systems). The PCs from the room 54.004 have direct access to the database server instances without passing through VPN.
+### 2.3. Requirement 3 (4 points)
+Create a procedure to check if a date and currency code exist in conversion tables. Return `TRUE` or `FALSE` accordingly.
 
 ---
 
-## Deadline:
+### 2.4. Requirement 4 (10 points)
+Develop a stored procedure to handle currency conversions involving USD. Parameters include:
+- **Input/Output Values:** Origin currency, destination currency, date, amount, and error message.
+
+---
+
+### 2.5. Requirement 5 (8 points)
+Create a procedure to insert new conversion rates into the tables for missing days. Ensure consistency in USD conversions.
+
+---
+
+### 2.6. Requirement 6 (2 points)
+Automate the execution of the procedure from Requirement 5 using a schedule:
+- Example: Group `P201_07` executes at 22:07 (22h for `P201` and 7 for group number).
+
+---
+
+### 2.7. Requirement 7 (3 points)
+Create a function to determine the default currency for a person based on their nationality.
+
+---
+
+### 2.8. Requirement 8 (10 points)
+Design a solution to track payments for bar and beer sales. Implement a structure for automatic data consistency.
+
+---
+
+### 2.9. Requirement 9 (3 points)
+Simulate a scenario where fake data is inserted for a specific artist's song (`Lew Sid`) during festivals.
+
+---
+
+### 2.10. Requirement 10 (5 points)
+Create a procedure to fix records where alcohol was sold to minors. Assign these records to specific festivalgoers.
+
+---
+
+### 2.11. Correction Criteria
+- Each requirement is evaluated based on completion:
+  - **0 Points:** Not done, errors, or incorrect results.
+  - **Half Points:** Nearly complete.
+  - **Full Points:** Fully complete.
+
+---
+
+### Deadline
 **06/12/2024 23:59h CET**
 
----
-
-# 1. Introduction
-
-In the remote database server, each group should find a database called `PXXX_XX_challenge2_music_festival` (where PXXX is your lab group and XX is your team number).  
-
-This provided database represents a scenario of a music festival’s company organizer. It is fully implemented and populated with data. Here you have the relational model of it:  
-
-**Disclaimer:** The contained information within the database is the result of random content generation. Any resemblance to reality is purely coincidental. In order to solve the queries, do not be guided by your previous musical knowledge or common sense. Expect the unexpected. There may be easter eggs.
-
----
-
-# 2. New Requirements for the Database (50 points)
-
-First of all, make sure that you already have the currency conversion tables created in your database as is asked in Challenge 2 - Part 1.2 (Insert New Data). They will be necessary for the following steps.  
-
-In this part, you will be asked to develop new database objects: **Functions, Procedures**, **Triggers**, and **Events**.  
-For all the following requirements, remember to use:
-
-```sql
-DROP db_object IF EXISTS db_object_name;
-```
-
-```sql
-CREATE db_object IF NOT EXISTS db_object_name ...
-```
-
-All database objects should follow this pattern for their names: `reqNN_OBJECT_NAME`.  
-
-For instance, for the requirement 1, it should be: `_req01_currency_rounder_`.
-
-Deliver all needed PL/SQL scripts of every requirement on a new SQL file using the following naming convention: **challenge2-reqNN.sql** _(being NN the number of the requirement)_.  
-
-If the requirement is a procedure or a function, add an example of use/execution in a comment at the end of the `.sql` of the delivered requirement.  
-
-**Note:** Submitted scripts have to be able to be launched several times and deliver always the same final result.
-
----
-
-## Requirements
-
-**2.1. Requirement 1 (1 point):**  
-[Details...]
-
-**2.2. Requirement 2 (4 points):**  
-[Details...]
-
-**...**
-
-**2.10. Requirement 10 (5 points):**  
-[Details...]
-
----
-
-# 2.11. Correction Criteria
-
-This part will be evaluated **with 50 points**, on these terms:  
-
-● Each requirement has its own points specified.  
-● Each requirement will be evaluated on these terms:  
-  ○ **Zero points** if the requirement is not done, has compilation errors, or does not deliver what is asked.  
-  ○ **Half** the requirement **points** if it compiles and delivers nearly all of what it is asked.  
-  ○ **Full** requirement points if it compiles and delivers all of what it is asked.
+For further details, refer to the [MySQL documentation on procedures](https://dev.mysql.com/doc/refman/8.4/en/create-procedure.html) and other relevant topics.
