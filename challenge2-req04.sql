@@ -1,3 +1,5 @@
+DELIMITER $$
+
 CREATE PROCEDURE convert_currency(
     IN origin_currency VARCHAR(3),
     IN destination_currency VARCHAR(3),
@@ -57,3 +59,34 @@ BEGIN
         PREPARE stmt FROM @query;
         EXECUTE stmt USING conversion_date;
         DEALLOCATE PREPARE stmt;
+
+        -- Check rate existence
+        IF @destination_rate IS NULL OR @destination_rate = 0 THEN
+            SET error_message = 'Conversion rate not found or invalid for destination currency.';
+            SET amount = 0;
+            LEAVE convert_currency;
+        END IF;
+
+        SET amount = round_float(amount * @destination_rate);
+
+    -- Another currency to USD
+    ELSEIF destination_currency = 'USD' THEN
+        SET @query = CONCAT('SELECT ', origin_currency, ' INTO @origin_rate FROM fx_to_usd WHERE date = ?');
+        PREPARE stmt FROM @query;
+        EXECUTE stmt USING conversion_date;
+        DEALLOCATE PREPARE stmt;
+
+        -- Check rate existence
+        IF @origin_rate IS NULL OR @origin_rate = 0 THEN
+            SET error_message = 'Conversion rate not found or invalid for origin currency.';
+            SET amount = 0;
+            LEAVE convert_currency;
+        END IF;
+
+        SET amount = round_float(amount / @origin_rate);
+
+    -- Final success message
+    SET error_message = NULL;
+END$$
+
+DELIMITER ;
