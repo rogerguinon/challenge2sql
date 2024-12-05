@@ -12,28 +12,35 @@ CREATE PROCEDURE validate_date_currency(
 )
 BEGIN
     DECLARE count INT;
+    DECLARE query VARCHAR(1024);
     SET is_valid = FALSE;
-    SET @query = CONCAT(
-        "SELECT COUNT(*) INTO @count FROM fx_from_usd WHERE date = ? AND `", currency_code, "` > 0 AND `", currency_code, "` IS NOT NULL"
+    SET currency_code = UPPER(currency_code);
+    
+    SET query = CONCAT(
+        "SELECT COUNT(*) FROM fx_from_usd WHERE date = '", check_date, "' AND `", currency_code, "` > 0 AND `", currency_code, "` IS NOT NULL"
     );
+    PREPARE stmt FROM query;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+    
+	SELECT COUNT(*) INTO count FROM fx_from_usd WHERE date = check_date AND 
+	(CASE WHEN `", currency_code, "` > 0 THEN 1 ELSE NULL END) IS NOT NULL;
 
-    PREPARE stmt FROM @query;
-    EXECUTE stmt USING @check_date;
-	SELECT count;
-    IF @count > 0 THEN
+    IF count > 0 THEN
         SET is_valid = TRUE;
     ELSE
-        SET @query = CONCAT(
-            "SELECT COUNT(*) INTO @count FROM fx_to_usd WHERE date = ? AND `", currency_code, "` > 0 AND `", currency_code, "` IS NOT NULL"
+        SET query = CONCAT(
+            "SELECT COUNT(*) FROM fx_to_usd WHERE date = '", check_date, "' AND `", currency_code, "` > 0 AND `", currency_code, "` IS NOT NULL"
         );
-
-        PREPARE stmt FROM @query;
-        EXECUTE stmt USING @check_date;
-
-        IF @count > 0 THEN
+        PREPARE stmt FROM query;
+        EXECUTE stmt;
+        DEALLOCATE PREPARE stmt;
+        
+		SELECT COUNT(*) INTO count FROM fx_to_usd WHERE date = check_date AND 
+		(CASE WHEN `", currency_code, "` > 0 THEN 1 ELSE NULL END) IS NOT NULL;
+        
+        IF count > 0 THEN
             SET is_valid = TRUE;
         END IF;
     END IF;
-
-    DEALLOCATE PREPARE stmt;
 END //
