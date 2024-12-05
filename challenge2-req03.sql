@@ -5,9 +5,9 @@ Hint: you may need to use a prepared statement.*/
 
 DELIMITER //
 
-DROP PROCEDURE IF EXISTS req03_validate_date_currency;
+DROP PROCEDURE IF EXISTS validate_date_currency;
 
-CREATE PROCEDURE req03_validate_date_currency(
+CREATE PROCEDURE validate_date_currency(
     IN check_date DATE,
     IN currency_code VARCHAR(3),
     OUT is_valid BOOLEAN
