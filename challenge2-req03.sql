@@ -5,30 +5,42 @@ Hint: you may need to use a prepared statement.*/
 
 DELIMITER //
 
-CREATE PROCEDURE CheckDateCurrency(
+DROP PROCEDURE IF EXISTS req03_validate_date_currency;
+
+CREATE PROCEDURE req03_validate_date_currency(
     IN check_date DATE,
     IN currency_code VARCHAR(3),
     OUT is_valid BOOLEAN
 )
 BEGIN
-    DECLARE row_count INT;
-
+    DECLARE count_entries INT;
     SET is_valid = FALSE;
 
-    IF currency_exists(currency_code) THEN
-    
-        SELECT COUNT(*)
-        INTO row_count
-        FROM (
-            SELECT value
-            FROM fx_from_usd
-            WHERE date = check_date AND COLUMN_NAME = UPPER(currency_code) AND IFNULL(value, 0) <> 0
-            UNION ALL
-            SELECT value
-            FROM fx_to_usd
-            WHERE date = check_date AND COLUMN_NAME = UPPER(currency_code) AND IFNULL(value, 0) <> 0
-        ) AS valid_rows;
+    -- Prepared statement to dynamically query both conversion tables
+    SET @query = CONCAT(
+        "SELECT COUNT(*) INTO @count_entries FROM conversion_table_1 WHERE date_field = ? AND `",
+        currency_code, "` > 0 AND `", currency_code, "` IS NOT NULL"
+    );
 
-        SET is_valid = (row_count > 0);
+    PREPARE stmt FROM @query;
+    EXECUTE stmt USING check_date;
+
+    IF @count_entries > 0 THEN
+        SET is_valid = TRUE;
+    ELSE
+        -- Repeat for second conversion table
+        SET @query = CONCAT(
+            "SELECT COUNT(*) INTO @count_entries FROM conversion_table_2 WHERE date_field = ? AND `",
+            currency_code, "` > 0 AND `", currency_code, "` IS NOT NULL"
+        );
+
+        PREPARE stmt FROM @query;
+        EXECUTE stmt USING check_date;
+
+        IF @count_entries > 0 THEN
+            SET is_valid = TRUE;
+        END IF;
     END IF;
-END//
+
+    DEALLOCATE PREPARE stmt;
+END //
