@@ -50,9 +50,11 @@ main: BEGIN
         LEAVE main;
     END IF;
 
+    -- USD to other currency
     IF origin_currency = 'USD' THEN
         SET @query = CONCAT('SELECT ', destination_currency, ' INTO @destination_rate FROM fx_from_usd WHERE date = ?');
         PREPARE stmt FROM @query;
+        SET @conversion_date := conversion_date;
         EXECUTE stmt USING @conversion_date;
         DEALLOCATE PREPARE stmt;
 
@@ -66,9 +68,11 @@ main: BEGIN
 
         SET amount = ROUND(amount * destination_rate, 2);
 
+    -- Another currency to USD
     ELSEIF destination_currency = 'USD' THEN
         SET @query = CONCAT('SELECT ', origin_currency, ' INTO @origin_rate FROM fx_to_usd WHERE date = ?');
         PREPARE stmt FROM @query;
+        SET @conversion_date := conversion_date;
         EXECUTE stmt USING @conversion_date;
         DEALLOCATE PREPARE stmt;
 
@@ -82,11 +86,13 @@ main: BEGIN
 
         SET amount = ROUND(amount * origin_rate, 2);
 
+    -- Other currency to other currency
     ELSE
         SET error_message = 'Currently, only USD as base or target currency is supported.';
         SET amount = 0;
         LEAVE main;
     END IF;
 
+    -- Final success message
     SET error_message = NULL;
-END//
+END //
